@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Dashboard</title>
+    <!-- Remix Icon -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-width: 60px;
+            --icon-size: 1.3rem;
+            --item-spacing: 20px;
+            --bg-color: #0f172a;
+            --text-color: rgba(255, 255, 255, 0.85);
+            --accent-color: #7dd3fc;
+        }
+        
+        body {
+            min-height: 100vh;
+            background: #0f172a;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--bg-color);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            overflow: visible;
+        }
+
+        .sidebar-menu {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: var(--item-spacing);
+        }
+
+        .menu-item {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .menu-item > a {
+            padding: 10px 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .menu-item > a i {
+            font-size: var(--icon-size);
+        }
+
+        /* Submenu */
+        .submenu {
+            position: absolute;
+            left: calc(100% - 1px);
+            top: 0;
+            width: 160px;
+            background: var(--bg-color);
+            border-radius: 0 8px 8px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: none;
+            display: none;
+            padding: 8px 0;
+            box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 101;
+        }
+
+        .menu-item.active .submenu {
+            display: block;
+        }
+
+        .submenu a {
+            padding: 8px 16px;
+            color: var(--text-color);
+            text-decoration: none;
+            display: block;
+            font-size: 0.85rem;
+        }
+
+        /* Main Content */
+        .namaku {
+            flex-grow: 1;
+            padding: 20px;
+            margin-left: var(--sidebar-width);
+        }
+
+        /* Header Styles - Modified */
+        .header {
+            margin-bottom: 20px; /* Reduced from 30px */
+        }
+
+        .greeting {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            letter-spacing: 1px;
+            color: var(--accent-color);
+            margin-bottom: 8px; /* Reduced from 15px */
+        }
+
+        .time-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Reduced from 10px */
+        }
+
+        /* Further reduced sizes */
+        .time-icon {
+            font-size: 1rem; /* Reduced from 1.2rem */
+        }
+        .day-icon {
+            color: #fbbf24;
+        }
+        .night-icon {
+            color: #818cf8;
+        }
+
+        .date {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem; /* Reduced from 0.8rem */
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Search Section */
+        .search-section {
+            margin: 25px 0; /* Reduced from 30px */
+            max-width: 600px;
+        }
+
+        .search-form {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .search-form:focus-within {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(125, 211, 252, 0.3);
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search-button {
+            background: var(--accent-color);
+            color: #0f172a;
+            border: none;
+            padding: 0 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background 0.2s ease;
+        }
+
+        .search-button:hover {
+            background: #bae6fd;
+        }
+
+        .search-button i {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-menu">
+            <!-- Home -->
+            <div class="menu-item">
+                <a href="#">
+                    <i class="ri-home-4-line"></i>
+                </a>
+            </div>
+
+            <!-- Dashboard -->
+            <div class="menu-item">
+                <a class="toggle-submenu">
+                    <i class="ri-dashboard-3-line"></i>
+                </a>
+                <div class="submenu">
+                    <a href="#">Analytics</a>
+                    <a href="#">Statistics</a>
+                    <a href="#">Reports</a>
+                </div>
+            </div>
+
+            <!-- Tools -->
+            <div class="menu-item">
+                <a class="toggle-submenu">
+                    <i class="ri-tools-line"></i>
+                </a>
+                <div class="submenu">
+                    <a href="#">Settings</a>
+                    <a href="#">Utilities</a>
+                    <a href="#">Options</a>
+                </div>
+            </div>
+
+            <!-- Social Media -->
+            <div class="menu-item">
+                <a href="https://github.com" target="_blank">
+                    <i class="ri-github-fill"></i>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="https://x.com" target="_blank">
+                    <i class="ri-twitter-x-line"></i>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="https://youtube.com" target="_blank">
+                    <i class="ri-youtube-line"></i>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="https://instagram.com" target="_blank">
+                    <i class="ri-instagram-line"></i>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="https://reddit.com" target="_blank">
+                    <i class="ri-reddit-line"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="namaku">
+        <div class="header">
+            <div class="greeting">Hi, Sushi!</div>
+            <div class="time-indicator">
+                <i id="timeIcon" class="time-icon"></i>
+                <span id="currentDate" class="date"></span>
+            </div>
+        </div>
+        
+        <!-- Search Section -->
+        <div class="search-section">
+            <form class="search-form" action="https://www.google.com/search" method="GET" target="_blank">
+                <input type="text" name="q" class="search-input" placeholder="Search with Google..." required>
+                <button type="submit" class="search-button">
+                    <i class="ri-search-line"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Submenu functionality
+            const toggleItems = document.querySelectorAll('.toggle-submenu');
+            
+            toggleItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const menuItem = this.closest('.menu-item');
+                    const wasActive = menuItem.classList.contains('active');
+                    
+                    // Close all submenus first
+                    document.querySelectorAll('.menu-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    
+                    // Open current if wasn't active
+                    if (!wasActive) {
+                        menuItem.classList.add('active');
+                    }
+                });
+            });
+            
+            // Close when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.menu-item')) {
+                    document.querySelectorAll('.menu-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                }
+            });
+
+            // Time-based icon and date
+            function updateTime() {
+                const now = new Date();
+                const hours = now.getHours();
+                const timeIcon = document.getElementById('timeIcon');
+                
+                // Change icon based on time
+                if (hours >= 6 && hours < 18) {
+                    timeIcon.className = 'time-icon day-icon ri-sun-fill';
+                } else {
+                    timeIcon.className = 'time-icon night-icon ri-moon-fill';
+                }
+                
+                // Update date
+                const options = { weekday: 'short', month: 'short', day: 'numeric' };
+                document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+            }
+            
+            updateTime();
+            setInterval(updateTime, 60000);
+        });
+    </script>
+</body>
+</html>
